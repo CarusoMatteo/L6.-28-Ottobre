@@ -16,9 +16,9 @@ public interface SocialNetworkUser<U extends User> extends User {
      * Adds a friend to the list of this user's current friends.
      * 
      * @param group
-     *            the group (circle) on which the user in going to be added
+     *              the group (circle) on which the user in going to be added
      * @param user
-     *            the user to be added as a user followed
+     *              the user to be added as a user followed
      * @return true if the user to be added as a followed person does not exist
      *         yet, false otherwise
      */
@@ -36,7 +36,7 @@ public interface SocialNetworkUser<U extends User> extends User {
      * Gets the list of followed people belonging to a given group.
      * 
      * @param groupName
-     *            the name of the group
+     *                  the name of the group
      * @return the collection of people followed by this user within group
      *         "groupName".
      */

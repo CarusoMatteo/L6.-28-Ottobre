@@ -7,7 +7,7 @@ import java.util.Objects;
 /**
  * This is a basic implementation of a {@link User}.
  * 
- * This class is completely mplemented and can be used as it is.
+ * This class is completely implemented and can be used as it is.
  * 
  */
 public class UserImpl implements User {
@@ -26,12 +26,12 @@ public class UserImpl implements User {
      * going to have a value equal to -1.
      * 
      * @param name
-     *            the user firstname
+     *                the user firstname
      * @param surname
-     *            the user lastname
+     *                the user lastname
      * @param user
-     *            alias of the user, i.e. the way a user is identified on an
-     *            application
+     *                alias of the user, i.e. the way a user is identified on an
+     *                application
      */
     public UserImpl(final String name, final String surname, final String user) {
         this(name, surname, user, -1);
@@ -41,14 +41,14 @@ public class UserImpl implements User {
      * Builds a new UserImpl.
      * 
      * @param name
-     *            the user firstname
+     *                the user firstname
      * @param surname
-     *            the user lastname
+     *                the user lastname
      * @param userAge
-     *            user's age
+     *                user's age
      * @param user
-     *            alias of the user, i.e. the way a user is identified within an
-     *            application
+     *                alias of the user, i.e. the way a user is identified within an
+     *                application
      */
     public UserImpl(final String name, final String surname, final String user, final int userAge) {
         this.firstName = Objects.requireNonNull(name);
@@ -111,9 +111,9 @@ public class UserImpl implements User {
         if (o != null && getClass().equals(o.getClass())) {
             final UserImpl user = (UserImpl) o;
             return firstName.equals(user.getFirstName())
-                && lastName.equals(user.getLastName())
-                && username.equals(user.getUsername())
-                && age == user.getAge();
+                    && lastName.equals(user.getLastName())
+                    && username.equals(user.getUsername())
+                    && age == user.getAge();
         }
         return false;
     }

@@ -8,7 +8,6 @@ import it.unibo.collections.social.api.User;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -27,6 +26,10 @@ import java.util.Set;
  */
 public final class SocialNetworkUserImpl<U extends User> extends UserImpl implements SocialNetworkUser<U> {
 
+    // User -> groupName
+    // private final Map<String, Set<U>> followers = new HashMap<>();
+    private final Map<String, Set<U>> followed = new HashMap<>();
+
     /*
      *
      * [FIELDS]
@@ -34,7 +37,8 @@ public final class SocialNetworkUserImpl<U extends User> extends UserImpl implem
      * Define any necessary field
      *
      * In order to save the people followed by a user organized in groups, adopt
-     * a generic-type Map:  think of what type of keys and values would best suit the requirements
+     * a generic-type Map: think of what type of keys and values would best suit the
+     * requirements
      */
 
     /*
@@ -52,22 +56,26 @@ public final class SocialNetworkUserImpl<U extends User> extends UserImpl implem
      * Builds a user participating in a social network.
      *
      * @param name
-     *            the user firstname
+     *                the user firstname
      * @param surname
-     *            the user lastname
+     *                the user lastname
      * @param userAge
-     *            user's age
+     *                user's age
      * @param user
-     *            alias of the user, i.e. the way a user is identified on an
-     *            application
+     *                alias of the user, i.e. the way a user is identified on an
+     *                application
      */
     public SocialNetworkUserImpl(final String name, final String surname, final String user, final int userAge) {
-        super(null, null, null, 0);
+        super(name, surname, user, userAge);
     }
 
     /*
      * 2) Define a further constructor where the age defaults to -1
      */
+
+    public SocialNetworkUserImpl(final String name, final String surname, final String user) {
+        super(name, surname, user, -1);
+    }
 
     /*
      * [METHODS]
@@ -76,7 +84,11 @@ public final class SocialNetworkUserImpl<U extends User> extends UserImpl implem
      */
     @Override
     public boolean addFollowedUser(final String circle, final U user) {
-        return false;
+        if (followed.get(circle) == null) {
+            followed.put(circle, new HashSet<>());
+        }
+
+        return followed.get(circle).add(user);
     }
 
     /**
@@ -86,11 +98,21 @@ public final class SocialNetworkUserImpl<U extends User> extends UserImpl implem
      */
     @Override
     public Collection<U> getFollowedUsersInGroup(final String groupName) {
-        return null;
+        if (!this.followed.containsKey(groupName)) {
+            return new HashSet<>();
+        }
+
+        return new HashSet<>(Set.copyOf(followed.get(groupName)));
     }
 
     @Override
     public List<U> getFollowedUsers() {
-        return null;
+        Set<U> allFollowed = new HashSet<>();
+
+        for (Set<U> users : followed.values()) {
+            allFollowed.addAll(users);
+        }
+
+        return new ArrayList<>(allFollowed);
     }
 }

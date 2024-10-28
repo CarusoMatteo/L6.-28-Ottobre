@@ -16,7 +16,7 @@ import java.util.Collection;
  * 
  * 1) Complete the test as per comments below
  * 
- * 2) Run it: every test must return true. 
+ * 2) Run it: every test must return true.
  */
 public final class TestSocialNetworkUser {
 
@@ -30,7 +30,7 @@ public final class TestSocialNetworkUser {
      * {@link SocialNetworkUserImpl}.
      * 
      * @param args
-     *            ignored
+     *             ignored
      */
     public static void main(final String... args) {
         /*
@@ -48,11 +48,12 @@ public final class TestSocialNetworkUser {
          * 
          * * Adam Smith, asmith, (no age)
          */
-        final SocialNetworkUser<User> kbacon = null; //TODO
-        final SocialNetworkUser<User> dwashington = null; //TODO
-        final SocialNetworkUser<User> mgladwell = null; //TODO
-        final SocialNetworkUser<User> ntaleb = null; //TODO
-        final User asmith = null; //TODO
+        final SocialNetworkUser<User> kbacon = new SocialNetworkUserImpl<>("Kevin", "Bacon", "kbacon", 56);
+        final SocialNetworkUser<User> dwashington = new SocialNetworkUserImpl<>("Denzel", "Washington", "dwashington",
+                59);
+        final SocialNetworkUser<User> mgladwell = new SocialNetworkUserImpl<>("Malcom", "Gladwell", "mgladwell", 51);
+        final SocialNetworkUser<User> ntaleb = new SocialNetworkUserImpl<>("Nicholas", "Taleb", "ntaleb", 54);
+        final User asmith = new UserImpl("Adam", "Smith", "asmith");
         /*
          * Make people follow each other
          */
@@ -70,7 +71,7 @@ public final class TestSocialNetworkUser {
         final Collection<User> mgladFriends = mgladwell.getFollowedUsersInGroup("Close friends");
         assertTrue("M Gladwell has not set yet any group called \"Close friends\"", mgladFriends.isEmpty());
         final Collection<User> dwashFriends = dwashington.getFollowedUsersInGroup(WRITERS);
-        assertTrue("Denzel has 2 followed people in group \"" + WRITERS + "\"",  dwashFriends.size() == 2);
+        assertTrue("Denzel has 2 followed people in group \"" + WRITERS + "\"", dwashFriends.size() == 2);
         /*
          * Adding another friend to Denzel's "writers" group
          */
@@ -80,9 +81,8 @@ public final class TestSocialNetworkUser {
          * STILL TWO PEOPLE in denzel's group called writers
          */
         assertTrue(
-            "Denzel has STILL 2 followed people in group \"" + WRITERS + "\"",
-            dwashington.getFollowedUsersInGroup(WRITERS).size() == 2
-        );
+                "Denzel has STILL 2 followed people in group \"" + WRITERS + "\"",
+                dwashington.getFollowedUsersInGroup(WRITERS).size() == 2);
     }
 
     private static void assertTrue(final String message, final boolean value) {
