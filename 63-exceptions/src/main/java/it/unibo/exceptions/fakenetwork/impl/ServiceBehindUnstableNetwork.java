@@ -23,12 +23,16 @@ public final class ServiceBehindUnstableNetwork implements NetworkComponent {
 
     /**
      * @param failProbability the probability that a network communication fails
-     * @param randomSeed random generator seed for reproducibility
+     * @param randomSeed      random generator seed for reproducibility
      */
     public ServiceBehindUnstableNetwork(final double failProbability, final int randomSeed) {
         /*
          * The probability should be in [0, 1[!
          */
+        if (failProbability < 0 || failProbability >= 1) {
+            throw new IllegalArgumentException("The probability must be in [0, 1)!");
+        }
+
         this.failProbability = failProbability;
         randomGenerator = new Random(randomSeed);
     }
@@ -55,8 +59,8 @@ public final class ServiceBehindUnstableNetwork implements NetworkComponent {
             commandQueue.add(data);
         } else {
             final var message = data + " is not a valid keyword (allowed: " + KEYWORDS + "), nor is a number";
-            System.out.println(message);
             commandQueue.clear();
+
             /*
              * This method, in this point, should throw an IllegalStateException.
              * Its cause, however, is the previous NumberFormatException.
@@ -64,6 +68,7 @@ public final class ServiceBehindUnstableNetwork implements NetworkComponent {
              *
              * The previous exceptions must be set as the cause of the new exception
              */
+            throw new IllegalArgumentException(message, exceptionWhenParsedAsNumber);
         }
     }
 

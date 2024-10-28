@@ -3,6 +3,7 @@ package it.unibo.exceptions;
 import it.unibo.exceptions.fakenetwork.api.NetworkComponent;
 import it.unibo.exceptions.fakenetwork.impl.ServiceBehindUnstableNetwork;
 
+import java.io.IOException;
 import java.io.PrintStream;
 
 import static it.unibo.exceptions.arithmetic.ArithmeticService.DIVIDED;
@@ -18,7 +19,8 @@ public final class UseArithmeticService {
 
     private static final PrintStream LOG = System.out;
 
-    private UseArithmeticService() { }
+    private UseArithmeticService() {
+    }
 
     /**
      *
@@ -44,24 +46,41 @@ public final class UseArithmeticService {
 
     private static void retrySendOnNetworkError(final NetworkComponent server, final String message) {
         /*
-         * This method should re-try to send message to the provided server, catching all IOExceptions,
+         * This method should re-try to send message to the provided server, catching
+         * all IOExceptions,
          * until it succeeds.
          */
+        try {
+            server.sendData(message);
+        } catch (IOException e) {
+            retrySendOnNetworkError(server, message);
+        }
     }
 
     private static String retryReceiveOnNetworkError(final NetworkComponent server) {
+        String response = "";
+
         /*
-         * This method should re-try to retrieve information from the provided server, catching all IOExceptions,
+         * This method should re-try to retrieve information from the provided server,
+         * catching all IOExceptions,
          * until it succeeds.
          */
-        return null;
+        try {
+            response = server.receiveResponse();
+        } catch (IOException e) {
+            response = retryReceiveOnNetworkError(server);
+        }
+
+        return response;
     }
 
     private static void assertEqualsAsDouble(final String expected, final String actual) {
         final var message = ": expected " + expected + " and received " + actual;
         /*
-         * Never call equality on doubles. If you need exact equality, then you can rely on the compare method,
-         * which internally uses the ULPs (Units in the Last Place) to compare the two doubles to support NaNs,
+         * Never call equality on doubles. If you need exact equality, then you can rely
+         * on the compare method,
+         * which internally uses the ULPs (Units in the Last Place) to compare the two
+         * doubles to support NaNs,
          * negative zeros, and similar corner cases.
          */
         if (Double.compare(parseDouble(expected), parseDouble(actual)) == 0) {
@@ -72,21 +91,19 @@ public final class UseArithmeticService {
     }
 
     private static void assertComputeResult(
-        final NetworkComponent server,
-        final String expected,
-        final String... operation
-    ) {
-        for (final var command: operation) {
+            final NetworkComponent server,
+            final String expected,
+            final String... operation) {
+        for (final var command : operation) {
             retrySendOnNetworkError(server, command);
         }
         assertEqualsAsDouble(expected, retryReceiveOnNetworkError(server));
     }
 
     private static void assertThrowsException(
-        final NetworkComponent server,
-        final Class<? extends Throwable> expected,
-        final String... operation
-    ) {
+            final NetworkComponent server,
+            final Class<? extends Throwable> expected,
+            final String... operation) {
         try {
             assertComputeResult(server, null, operation);
             throw new AssertionError(expected.getSimpleName() + " expected, but no exception was thrown");
@@ -96,24 +113,21 @@ public final class UseArithmeticService {
     }
 
     private static void assertExceptionIs(
-        final Class<? extends Throwable> expectedException,
-        final Throwable actualException
-    ) {
+            final Class<? extends Throwable> expectedException,
+            final Throwable actualException) {
         if (!expectedException.isAssignableFrom(actualException.getClass())) {
             throw new AssertionError(
-                "Expected exception "
-                    + expectedException.getSimpleName()
-                    + ", but got "
-                    + actualException.getClass().getSimpleName()
-            );
+                    "Expected exception "
+                            + expectedException.getSimpleName()
+                            + ", but got "
+                            + actualException.getClass().getSimpleName());
         }
         LOG.println(
-            "Exception successfully collected: "
-                + actualException.getClass().getSimpleName()
-                + "["
-                + actualException.getMessage()
-                + "]"
-        );
+                "Exception successfully collected: "
+                        + actualException.getClass().getSimpleName()
+                        + "["
+                        + actualException.getMessage()
+                        + "]");
     }
 
 }
