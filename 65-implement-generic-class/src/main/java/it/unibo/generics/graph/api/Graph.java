@@ -13,7 +13,7 @@ public interface Graph<N> {
      * Adds a node: nothing happens if node is null or already there.
      * 
      * @param node
-     *            the node to add
+     *             the node to add
      */
     void addNode(N node);
 
@@ -21,9 +21,9 @@ public interface Graph<N> {
      * Adds an edge: nothing happens if source or target are null.
      * 
      * @param source
-     *            starting node
+     *               starting node
      * @param target
-     *            ending node
+     *               ending node
      */
     void addEdge(N source, N target);
 
@@ -36,7 +36,7 @@ public interface Graph<N> {
      * Returns all the nodes directly targeted from a node.
      * 
      * @param node
-     *            the node
+     *             the node
      * @return all the nodes directly targeted from the passed node
      */
     Set<N> linkedNodes(N node);
@@ -45,9 +45,9 @@ public interface Graph<N> {
      * Gets one sequence of nodes connecting source to target.
      * 
      * @param source
-     *            the source node
+     *               the source node
      * @param target
-     *            the target node
+     *               the target node
      * @return a sequence of nodes connecting sources and target
      */
     List<N> getPath(N source, N target);
