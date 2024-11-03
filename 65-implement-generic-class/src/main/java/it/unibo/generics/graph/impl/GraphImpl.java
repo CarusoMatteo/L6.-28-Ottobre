@@ -4,6 +4,7 @@ import java.util.*;
 
 import it.unibo.generics.graph.api.Graph;
 import it.unibo.generics.graph.api.NodeColor;
+import it.unibo.generics.graph.api.SearchAlgorithm;
 
 import static it.unibo.generics.graph.api.NodeColor.*;
 
@@ -12,8 +13,7 @@ public class GraphImpl<N> implements Graph<N> {
     /**
      * Select the Search Method.
      */
-    // private static final SearchAlgorithm algorithm =
-    // SearchAlgorithm.BREADTH_FIRST;
+    private static final SearchAlgorithm algorithm = SearchAlgorithm.BREADTH_FIRST;
 
     private final Map<N, Set<N>> edges = new HashMap<>();
 
@@ -47,8 +47,10 @@ public class GraphImpl<N> implements Graph<N> {
 
     @Override
     public List<N> getPath(final N source, final N target) {
-        return breadthFirstSearch(source, target);
-        // return depthFirstSearchWrapper(source, target);
+        return algorithm == SearchAlgorithm.BREADTH_FIRST
+                ? breadthFirstSearch(source, target)
+                : null;
+        // : depthFirstSearch(source, target);
     }
 
     private List<N> breadthFirstSearch(final N source, final N target) {
