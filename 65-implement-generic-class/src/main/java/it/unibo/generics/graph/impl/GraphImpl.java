@@ -13,14 +13,13 @@ public class GraphImpl<N> implements Graph<N> {
     /**
      * Select the Search Method.
      */
-    private static final SearchAlgorithm algorithm = SearchAlgorithm.BREADTH_FIRST;
+    private static final SearchAlgorithm algorithm = SearchAlgorithm.DEPTH_FIRST;
 
     private final Map<N, Set<N>> edges = new HashMap<>();
 
     @Override
     public void addNode(final N node) {
         if (node != null) {
-            // this.nodes.add(node);
             this.edges.put(node, new HashSet<N>());
         }
     }
@@ -49,8 +48,7 @@ public class GraphImpl<N> implements Graph<N> {
     public List<N> getPath(final N source, final N target) {
         return algorithm == SearchAlgorithm.BREADTH_FIRST
                 ? breadthFirstSearch(source, target)
-                : null;
-        // : depthFirstSearch(source, target);
+                : depthFirstSearch(source, target);
     }
 
     private List<N> breadthFirstSearch(final N source, final N target) {
@@ -90,12 +88,50 @@ public class GraphImpl<N> implements Graph<N> {
             colors.put(current, BLACK);
         }
 
-        System.out.println(previous);
-
         // Step 4:
         // Climb back from the target node until it is null:
         // either no path was found, or the source was reached.
         return getPathFromSourceToTarget(source, target, previous);
+    }
+
+    private List<N> depthFirstSearch(final N source, final N target) {
+        // Contains the status for each node.
+        final Map<N, NodeColor> colors = new HashMap<>();
+        // Contains the prevoius node for each node.
+        final Map<N, N> previous = new HashMap<>();
+
+        // Step 1:
+        // Initialize all nodes' colors.
+        for (final N node : this.edges.keySet()) {
+            colors.put(node, WHITE);
+            previous.put(node, null);
+        }
+
+        // Step 2:
+        // Set source as first node to check
+        // by calling the recursive method deptFirstSearchRec on it.
+        depthFirstSearchRec(source, colors, previous);
+
+        // Step 3:
+        // Check if during the search we missed any disconnected nodes.
+        for (final N node : this.edges.keySet()) {
+            if (colors.get(node) == WHITE) {
+                depthFirstSearchRec(node, colors, previous);
+            }
+        }
+
+        return getPathFromSourceToTarget(source, target, previous);
+    }
+
+    private void depthFirstSearchRec(final N current, final Map<N, NodeColor> colors, final Map<N, N> previous) {
+        colors.put(current, GREY);
+        for (final N adjacent : edges.get(current)) {
+            if (colors.get(adjacent) == WHITE) {
+                previous.put(adjacent, current);
+                depthFirstSearchRec(adjacent, colors, previous);
+            }
+        }
+        colors.put(current, BLACK);
     }
 
     private List<N> getPathFromSourceToTarget(final N source, final N target, final Map<N, N> previous) {
